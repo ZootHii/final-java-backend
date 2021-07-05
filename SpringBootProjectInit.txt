@@ -1,0 +1,6 @@
+https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.5.2.RELEASE&packaging=jar&jvmVersion=16&groupId=com.zoothii&artifactId=final-java-backend&name=final-java-backend&description=Spring%20boot%20java%20backend&packageName=com.zoothii.final-java-backend&dependencies=devtools,lombok,web,data-jpa,postgresql
+
+
+docker run -p 80:80 --name pgadmin -e PGADMIN_DEFAULT_EMAIL="ahmet.zoothii@gmail.com" -e PGADMIN_DEFAULT_PASSWORD="1234" dpage/pgadmin4
+
+host.docker.internal // for the pgAdmin hostname
