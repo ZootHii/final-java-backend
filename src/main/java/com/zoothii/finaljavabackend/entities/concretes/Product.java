@@ -17,18 +17,23 @@ public class Product {
     @Column(name = "product_id")
     private int id;
 
-    @Column(name = "category_id")
-    private int categoryId;
+    //@Column(name = "category_id")
+    //private int categoryId;
 
-    @Column(name = "product_name")
+    //@Column(name = "product_name")
     private String productName;
 
-    @Column(name = "quantity_per_unit")
+    //@Column(name = "quantity_per_unit")
     private String quantityPerUnit;
 
-    @Column(name = "unit_price")
+    //@Column(name = "unit_price")
     private double unitPrice;
 
-    @Column(name = "units_in_stock")
+    //@Column(name = "units_in_stock")
     private short unitsInStock;
+
+    // many (product) to one (category)
+    @ManyToOne()
+    @JoinColumn(name = "category_id")
+    private Category category;
 }
