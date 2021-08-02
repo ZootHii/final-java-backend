@@ -1,6 +1,7 @@
 package com.zoothii.finaljavabackend.business.abstracts;
 
 import com.zoothii.finaljavabackend.core.utulities.results.DataResult;
+import com.zoothii.finaljavabackend.core.utulities.results.Result;
 import com.zoothii.finaljavabackend.entities.concretes.Product;
 import com.zoothii.finaljavabackend.entities.dtos.ProductCategoryDetailsDto;
 
@@ -9,9 +10,11 @@ import java.util.List;
 public interface ProductService {
     DataResult<List<Product>> getProducts();
 
-    DataResult<Product> createProduct(Product product);
+    Result createProduct(Product product);
 
     DataResult<Product> getByProductName(String productName);
+
+    DataResult<Product> getById(int productId);
 
     DataResult<Product> getByProductNameAndCategoryId(String productName, int categoryId);
 

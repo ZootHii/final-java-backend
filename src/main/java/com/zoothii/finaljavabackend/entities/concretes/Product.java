@@ -3,8 +3,12 @@ package com.zoothii.finaljavabackend.entities.concretes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
@@ -21,6 +25,7 @@ public class Product {
     //private int categoryId;
 
     //@Column(name = "product_name")
+    @NotBlank
     private String productName;
 
     //@Column(name = "quantity_per_unit")
@@ -33,7 +38,8 @@ public class Product {
     private short unitsInStock;
 
     // many (product) to one (category)
-    @ManyToOne()
+
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 }

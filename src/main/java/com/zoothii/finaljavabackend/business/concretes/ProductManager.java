@@ -2,7 +2,9 @@ package com.zoothii.finaljavabackend.business.concretes;
 
 import com.zoothii.finaljavabackend.business.abstracts.ProductService;
 import com.zoothii.finaljavabackend.core.utulities.results.DataResult;
+import com.zoothii.finaljavabackend.core.utulities.results.Result;
 import com.zoothii.finaljavabackend.core.utulities.results.SuccessDataResult;
+import com.zoothii.finaljavabackend.core.utulities.results.SuccessResult;
 import com.zoothii.finaljavabackend.data_access.abstracts.ProductDao;
 import com.zoothii.finaljavabackend.entities.concretes.Product;
 import com.zoothii.finaljavabackend.entities.dtos.ProductCategoryDetailsDto;
@@ -31,13 +33,20 @@ public class ProductManager implements ProductService {
     }
 
     @Override
-    public DataResult<Product> createProduct(Product product) {
-        return new SuccessDataResult<>(this.productDao.save(product), "product saved successfully");
+    public Result createProduct(Product product) {
+        Product productToSave = this.productDao.save(product);
+        Product productSaved = this.productDao.findById(productToSave.getId()).get();
+        return new SuccessResult("product saved successfully"  + productToSave.getCategory().getCategoryName() + productSaved.getCategory().getCategoryName());
     }
 
     @Override
     public DataResult<Product> getByProductName(String productName) {
         return new SuccessDataResult<>(this.productDao.getByProductName(productName));
+    }
+
+    @Override
+    public DataResult<Product> getById(int productId) {
+        return new SuccessDataResult<>(this.productDao.findById(productId).get());
     }
 
     @Override

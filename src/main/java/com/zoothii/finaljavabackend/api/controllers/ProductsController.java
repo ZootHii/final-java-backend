@@ -2,15 +2,24 @@ package com.zoothii.finaljavabackend.api.controllers;
 
 import com.zoothii.finaljavabackend.business.abstracts.ProductService;
 import com.zoothii.finaljavabackend.core.utulities.results.DataResult;
+import com.zoothii.finaljavabackend.core.utulities.results.ErrorDataResult;
+import com.zoothii.finaljavabackend.core.utulities.results.Result;
 import com.zoothii.finaljavabackend.entities.concretes.Product;
 import com.zoothii.finaljavabackend.entities.dtos.ProductCategoryDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/")
+@CrossOrigin
 public class ProductsController {
 
     private final ProductService productService;
@@ -26,13 +35,18 @@ public class ProductsController {
     }
 
     @PostMapping("product")
-    public DataResult<Product> createProduct(@RequestBody Product product) {
+    public Result createProduct(@Valid @RequestBody Product product) {
         return this.productService.createProduct(product);
     }
 
-    @GetMapping("products/{productName}")
+    /*@GetMapping("products/{productName}")
     public DataResult<Product> getByProductName(@PathVariable String productName) {
         return this.productService.getByProductName(productName);
+    }*/
+
+    @GetMapping("products/{id}")
+    public DataResult<Product> getById(@PathVariable int id) {
+        return this.productService.getById(id);
     }
 
     // http://localhost:8181/api/products?and&categoryId=1&productName=Chai
@@ -95,7 +109,6 @@ public class ProductsController {
     }
 
 
-
     /*@GetMapping(value = "products", params = {"productName","categoryId"})
     public DataResult<List<Product>> getByProductNameOrCategoryId(@PathVariable String productName, @PathVariable Integer categoryId){
         return this.productService.getByProductNameOrCategoryId(productName, categoryId);
@@ -115,5 +128,18 @@ public class ProductsController {
     public @ResponseBody Book getBook(@PathVariable int id) {
         return findBookById(id);
     }*/
+
+
+    // ****** VALIDATION ******
+    // todo tek seferlik kullanım haline getir
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDataResult<Object> validationExceptionHandler(MethodArgumentNotValidException exception){
+        Map<String, String> validationErrors = new HashMap<>();
+        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()){
+            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+        return new ErrorDataResult<>(validationErrors, "validation errors");
+    }
 
 }
