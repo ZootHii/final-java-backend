@@ -114,7 +114,7 @@ public class AuthManager implements AuthService {
 
     @Override
     public DataResult<JwtResponse> login(LoginRequest loginRequest) {
-        return new SuccessDataResult<>(generateJwtResponseUsernamePassword(loginRequest.getUsername(), loginRequest.getPassword()), "User registered successfully!");
+        return new SuccessDataResult<>(generateJwtResponseUsernamePassword(loginRequest.getUsername(), loginRequest.getPassword()), "User logged in successfully!");
     }
 
     // authenticate user and return jwt as response

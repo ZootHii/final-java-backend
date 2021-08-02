@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import com.zoothii.finaljavabackend.business.abstracts.AuthService;
 import com.zoothii.finaljavabackend.core.utulities.results.DataResult;
 import com.zoothii.finaljavabackend.core.utulities.results.ErrorDataResult;
+import com.zoothii.finaljavabackend.entities.payload.request.LoginRequest;
 import com.zoothii.finaljavabackend.entities.payload.request.RegisterRequest;
 import com.zoothii.finaljavabackend.entities.payload.response.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,8 +127,7 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public DataResult<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-
-
+		return authService.login(loginRequest);
 	}
 
 	@PostMapping("/register")
