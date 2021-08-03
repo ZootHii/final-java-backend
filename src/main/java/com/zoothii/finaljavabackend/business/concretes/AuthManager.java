@@ -3,7 +3,6 @@ package com.zoothii.finaljavabackend.business.concretes;
 import com.zoothii.finaljavabackend.business.abstracts.AuthService;
 import com.zoothii.finaljavabackend.core.data_access.RoleRepository;
 import com.zoothii.finaljavabackend.core.data_access.UserRepository;
-import com.zoothii.finaljavabackend.core.entities.ERole;
 import com.zoothii.finaljavabackend.core.entities.Role;
 import com.zoothii.finaljavabackend.core.entities.User;
 import com.zoothii.finaljavabackend.core.utulities.results.*;
@@ -12,9 +11,7 @@ import com.zoothii.finaljavabackend.core.utulities.security.services.UserDetails
 import com.zoothii.finaljavabackend.entities.payload.request.LoginRequest;
 import com.zoothii.finaljavabackend.entities.payload.request.RegisterRequest;
 import com.zoothii.finaljavabackend.entities.payload.response.JwtResponse;
-import com.zoothii.finaljavabackend.entities.payload.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -53,20 +50,6 @@ public class AuthManager implements AuthService {
     @Override
     public DataResult<JwtResponse> register(RegisterRequest registerRequest) {
 
-        // TODO checkIf methods will be created // DONE
-        /*if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
-        }
-
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
-        }
-        */
-
         Result resultUserNameExists = checkIfUserNameExists(registerRequest.getUsername());
         Result resultEmailExists = checkIfEmailExists(registerRequest.getEmail());
 
@@ -79,17 +62,65 @@ public class AuthManager implements AuthService {
 
         // Create new user's account and hash password
         User user = new User(registerRequest.getUsername(), registerRequest.getEmail(), encoder.encode(registerRequest.getPassword()));
-        Set<String> strRoles = registerRequest.getRole();
+        Set<String> strRoles = registerRequest.getRoles();
         Set<Role> roles = new HashSet<>();
 
         // TODO test user role without giving it when registering
 
         // set requested roles checking from database for security
-        if (strRoles == null) {
+        if (strRoles == null){
+            // TODO default ROLE_USER ekle database de yoksa önce database e ekle işlemini yap
+            Role userRole = roleRepository.getByName("ROLE_USER");
+            if (userRole == null){
+                return new ErrorDataResult<>("default role user yok");
+            }
+            roles.add(userRole);
+        } else {
+            for (String role : strRoles) {
+
+                if (checkIfRoleExists(role).isSuccess()){
+                    Role roleToAdd = roleRepository.getByName(role);
+                    roles.add(roleToAdd);
+                }
+
+                /*Role roleToAdd = roleRepository.getByName(role);
+                if (roleToAdd == null){
+                    return new ErrorDataResult<>("Role: "+ role +"is not found");
+                }
+                else {
+                    roles.add(roleToAdd);
+                }*/
+            }
+        }
+
+
+        /*if (strRoles == null){
+            Role userRole = roleRepository.getByName(ERole.ROLE_USER.toString());
+            if (userRole == null){
+                return new ErrorDataResult<>("role yok");
+            }
+            roles.add(userRole);
+        } else {
+            for (String role : strRoles) {
+                Role roleToAdd = roleRepository.getByName(role);
+                if (roleToAdd == null){
+                    return new ErrorDataResult<>("Role: "+ role +"is not found");
+                }
+                else {
+                    roles.add(roleToAdd);
+                }
+            }
+        }*/
+
+
+        
+        
+        /*if (strRoles == null) {
             Role userRole = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
+                
                 switch (role) {
                     case "admin":
                         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -105,7 +136,7 @@ public class AuthManager implements AuthService {
                 }
             });
         }
-
+*/
         // set requested roles and save
         user.setRoles(roles);
         userRepository.save(user);
@@ -132,6 +163,14 @@ public class AuthManager implements AuthService {
     }
 
     // *** BUSINESS RULES ***
+
+    public Result checkIfRoleExists(String role){
+        if (roleRepository.getByName(role) == null){
+            return new ErrorResult("Error: Role "+role+" is not found.");
+        }
+        return new SuccessResult();
+    }
+
     public Result checkIfUserNameExists(String userName) {
         if (userRepository.existsByUsername(userName)){
             return new ErrorResult("Error: Username is already taken!");

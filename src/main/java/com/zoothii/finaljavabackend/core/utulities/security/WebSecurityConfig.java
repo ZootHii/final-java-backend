@@ -21,13 +21,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
+		// https://www.baeldung.com/spring-security-method-security
 		// securedEnabled = true,
 		// jsr250Enabled = true,
 		prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	final
-	UserDetailsServiceImpl userDetailsService;
-
+	private final UserDetailsServiceImpl userDetailsService;
 	private final AuthEntryPointJwt unauthorizedHandler;
 
 	@Autowired
@@ -67,6 +66,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/test/**").permitAll()
 				.antMatchers("/**").permitAll()
 				.anyRequest().authenticated();
+
+		// TODO /swagger-ui.html#/auth-controller/ give access
 
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
