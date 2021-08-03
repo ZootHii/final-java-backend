@@ -1,19 +1,13 @@
 package com.zoothii.finaljavabackend.api.controllers;
 
-import java.util.*;
-
 import javax.validation.Valid;
 
 import com.zoothii.finaljavabackend.business.abstracts.AuthService;
 import com.zoothii.finaljavabackend.core.utulities.results.DataResult;
-import com.zoothii.finaljavabackend.core.utulities.results.ErrorDataResult;
 import com.zoothii.finaljavabackend.entities.payload.request.LoginRequest;
 import com.zoothii.finaljavabackend.entities.payload.request.RegisterRequest;
-import com.zoothii.finaljavabackend.entities.payload.response.JwtResponse;
+import com.zoothii.finaljavabackend.entities.payload.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 //@CrossOrigin(origins = "*", maxAge = 3600)
@@ -30,12 +24,12 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public DataResult<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+	public DataResult<UserResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
 		return authService.login(loginRequest);
 	}
 
 	@PostMapping("/register")
-	public DataResult<JwtResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
+	public DataResult<UserResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
 		return authService.register(registerRequest);
 	}
 

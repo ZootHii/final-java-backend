@@ -6,11 +6,12 @@ import com.zoothii.finaljavabackend.core.data_access.UserRepository;
 import com.zoothii.finaljavabackend.core.entities.Role;
 import com.zoothii.finaljavabackend.core.entities.User;
 import com.zoothii.finaljavabackend.core.utulities.results.*;
+import com.zoothii.finaljavabackend.core.utulities.security.jwt.AccessToken;
 import com.zoothii.finaljavabackend.core.utulities.security.jwt.JwtUtils;
 import com.zoothii.finaljavabackend.core.utulities.security.services.UserDetailsImpl;
 import com.zoothii.finaljavabackend.entities.payload.request.LoginRequest;
 import com.zoothii.finaljavabackend.entities.payload.request.RegisterRequest;
-import com.zoothii.finaljavabackend.entities.payload.response.JwtResponse;
+import com.zoothii.finaljavabackend.entities.payload.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,7 +45,7 @@ public class AuthManager implements AuthService {
 
 
     @Override
-    public DataResult<JwtResponse> register(RegisterRequest registerRequest) {
+    public DataResult<UserResponse> register(RegisterRequest registerRequest) {
 
         Result resultUserNameExists = checkIfUserNameExists(registerRequest.getUsername());
         Result resultEmailExists = checkIfEmailExists(registerRequest.getEmail());
@@ -86,22 +87,21 @@ public class AuthManager implements AuthService {
     }
 
     @Override
-    public DataResult<JwtResponse> login(LoginRequest loginRequest) {
+    public DataResult<UserResponse> login(LoginRequest loginRequest) {
         return new SuccessDataResult<>(generateJwtResponseUsernamePassword(loginRequest.getUsername(), loginRequest.getPassword()), "User logged in successfully!");
     }
 
     // authenticate user and return jwt as response
-    public JwtResponse generateJwtResponseUsernamePassword(String username, String password){
+    public UserResponse generateJwtResponseUsernamePassword(String username, String password){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        AccessToken accessToken = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
 
-        JwtResponse jwtResponse = new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles);
-        return jwtResponse;
+        return new UserResponse(accessToken, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles);
     }
 
     // *** BUSINESS RULES ***

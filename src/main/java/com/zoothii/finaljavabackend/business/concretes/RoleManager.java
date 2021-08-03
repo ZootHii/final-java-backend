@@ -30,7 +30,7 @@ public class RoleManager implements RoleService {
         if (!resultRoleExists.isSuccess()){
             return new ErrorResult(resultRoleExists.getMessage());
         }
-        
+
         roleRepository.save(role);
         return new SuccessResult("Role "+role.getName()+" is successfully created.");
     }
