@@ -28,13 +28,9 @@ import java.util.stream.Collectors;
 public class AuthManager implements AuthService {
 
     final private AuthenticationManager authenticationManager;
-
     final private UserRepository userRepository;
-
     final private RoleRepository roleRepository;
-
     final private PasswordEncoder encoder;
-
     final JwtUtils jwtUtils;
 
     @Autowired
@@ -77,66 +73,12 @@ public class AuthManager implements AuthService {
             roles.add(userRole);
         } else {
             for (String role : strRoles) {
-
                 if (checkIfRoleExists(role).isSuccess()){
                     Role roleToAdd = roleRepository.getByName(role);
                     roles.add(roleToAdd);
                 }
-
-                /*Role roleToAdd = roleRepository.getByName(role);
-                if (roleToAdd == null){
-                    return new ErrorDataResult<>("Role: "+ role +"is not found");
-                }
-                else {
-                    roles.add(roleToAdd);
-                }*/
             }
         }
-
-
-        /*if (strRoles == null){
-            Role userRole = roleRepository.getByName(ERole.ROLE_USER.toString());
-            if (userRole == null){
-                return new ErrorDataResult<>("role yok");
-            }
-            roles.add(userRole);
-        } else {
-            for (String role : strRoles) {
-                Role roleToAdd = roleRepository.getByName(role);
-                if (roleToAdd == null){
-                    return new ErrorDataResult<>("Role: "+ role +"is not found");
-                }
-                else {
-                    roles.add(roleToAdd);
-                }
-            }
-        }*/
-
-
-        
-        
-        /*if (strRoles == null) {
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                
-                switch (role) {
-                    case "admin":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminRole);
-                        break;
-                    case "mod":
-                        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(modRole);
-                        break;
-                    default:
-                        Role userRole = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(userRole);
-                }
-            });
-        }
-*/
         // set requested roles and save
         user.setRoles(roles);
         userRepository.save(user);
@@ -163,7 +105,6 @@ public class AuthManager implements AuthService {
     }
 
     // *** BUSINESS RULES ***
-
     public Result checkIfRoleExists(String role){
         if (roleRepository.getByName(role) == null){
             return new ErrorResult("Error: Role "+role+" is not found.");
