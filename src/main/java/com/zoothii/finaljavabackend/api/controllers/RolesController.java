@@ -1,9 +1,10 @@
 package com.zoothii.finaljavabackend.api.controllers;
 
-import com.zoothii.finaljavabackend.business.abstracts.UserService;
-import com.zoothii.finaljavabackend.core.entities.User;
+import com.zoothii.finaljavabackend.business.abstracts.RoleService;
+import com.zoothii.finaljavabackend.core.entities.Role;
 import com.zoothii.finaljavabackend.core.utulities.results.DataResult;
 import com.zoothii.finaljavabackend.core.utulities.results.ErrorDataResult;
+import com.zoothii.finaljavabackend.core.utulities.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -15,54 +16,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
 @RequestMapping("/api/")
+@RestController
 @CrossOrigin
-public class UsersController {
-
-    private final UserService userService;
+public class RolesController {
+    private final RoleService roleService;
 
     @Autowired
-    public UsersController(UserService userService) {
-        this.userService = userService;
+    public RolesController(RoleService roleService) {
+        this.roleService = roleService;
     }
 
-    @GetMapping("users")
-    public DataResult<List<User>> getUsers(){
-        return this.userService.getUsers();
+    @GetMapping("roles")
+    public DataResult<List<Role>> getRoles(){
+        return roleService.getRoles();
     }
 
-    
-
-
-    /*@PostMapping("user")
-    //@ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
-        return ResponseEntity.ok(this.userService.createUser(user));
-
-    }*/
-
-    /*@PostMapping("user")
-    @ResponseStatus(HttpStatus.CREATED)
-    public DataResult<User> createUser(@Valid @RequestBody User user) { // to validation add @Valid annotation
-        return this.userService.createUser(user);
-
-    }*/
-
-    /*@PostMapping("user")
-    @ResponseStatus(HttpStatus.CREATED)
-    public DataResult<User> createUser(@RequestBody User user) {
-        return this.userService.createUser(user);
-
-    }*/
-
-    /*@GetMapping(value = "users/", params = "eMail")
-    public DataResult<User> getByEMail(@RequestParam String eMail) {
-        return this.userService.getByEMail(eMail);
-    }*/
-
-
-
+    @PostMapping("role")
+    public Result createRole(@Valid @RequestBody Role role){
+        return roleService.createRole(role);
+    }
 
     // ****** VALIDATION ******
     // todo tek seferlik kullanım haline getir
@@ -75,6 +48,5 @@ public class UsersController {
         }
         return new ErrorDataResult<>(validationErrors, "validation errors");
     }
-
 
 }

@@ -40,16 +40,16 @@ public class AuthController {
 	}
 
 
-	// ****** VALIDATION ******
-	// todo tek seferlik kullanım haline getir
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorDataResult<Object> validationExceptionHandler(MethodArgumentNotValidException exception){
-		Map<String, String> validationErrors = new HashMap<>();
-		for (FieldError fieldError : exception.getBindingResult().getFieldErrors()){
-			validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
-		}
-		return new ErrorDataResult<>(validationErrors, "validation errors");
-	}
+//	// ****** VALIDATION ******
+//	// todo tek seferlik kullanım haline getir
+//	@ExceptionHandler(MethodArgumentNotValidException.class)
+//	@ResponseStatus(HttpStatus.BAD_REQUEST)
+//	public ErrorDataResult<Object> validationExceptionHandler(MethodArgumentNotValidException exception){
+//		Map<String, String> validationErrors = new HashMap<>();
+//		for (FieldError fieldError : exception.getBindingResult().getFieldErrors()){
+//			validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
+//		}
+//		return new ErrorDataResult<>(validationErrors, "validation errors");
+//	}
 
 }

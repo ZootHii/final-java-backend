@@ -1,5 +1,6 @@
 package com.zoothii.finaljavabackend.core.data_access;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.zoothii.finaljavabackend.core.entities.User;
@@ -13,4 +14,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Boolean existsByUsername(String username);
 
 	Boolean existsByEmail(String email);
+
 }
