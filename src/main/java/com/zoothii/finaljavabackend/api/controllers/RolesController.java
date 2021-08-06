@@ -5,6 +5,7 @@ import com.zoothii.finaljavabackend.core.entities.Role;
 import com.zoothii.finaljavabackend.core.utulities.results.DataResult;
 import com.zoothii.finaljavabackend.core.utulities.results.ErrorDataResult;
 import com.zoothii.finaljavabackend.core.utulities.results.Result;
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
