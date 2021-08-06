@@ -40,7 +40,7 @@ public class RolesController {
 
     @PostMapping("role")
     public ResponseEntity<Result> createRole(@Valid @RequestBody Role role) {
-        Result result = roleService.createRole(role);
+        var result = roleService.createRole(role);
         if (!result.isSuccess()) {
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
