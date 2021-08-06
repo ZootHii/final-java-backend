@@ -5,7 +5,6 @@ import com.zoothii.finaljavabackend.core.entities.Role;
 import com.zoothii.finaljavabackend.core.utulities.results.DataResult;
 import com.zoothii.finaljavabackend.core.utulities.results.ErrorDataResult;
 import com.zoothii.finaljavabackend.core.utulities.results.Result;
-import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +49,7 @@ public class RolesController {
 
     @GetMapping("role/name")
     public ResponseEntity<DataResult<Role>> getRoleByName(@RequestParam String name) {
-        DataResult<Role> result = roleService.getRoleByName(name);
+        var result = roleService.getRoleByName(name);
         if (!result.isSuccess()) {
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
