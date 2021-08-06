@@ -40,7 +40,7 @@ public class RolesController {
 
     @PostMapping("role")
     public ResponseEntity<Result> createRole(@Valid @RequestBody Role role) {
-        var result = roleService.createRole(role);
+        Result result = roleService.createRole(role);
         if (!result.isSuccess()) {
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
@@ -49,7 +49,7 @@ public class RolesController {
 
     @GetMapping("role/name")
     public ResponseEntity<DataResult<Role>> getRoleByName(@RequestParam String name) {
-        var result = roleService.getRoleByName(name);
+        DataResult<Role> result = roleService.getRoleByName(name);
         if (!result.isSuccess()) {
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }

@@ -33,7 +33,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<DataResult<UserResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
-        var result = authService.login(loginRequest);
+        DataResult<UserResponse> result = authService.login(loginRequest);
         if (!result.isSuccess()) {
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
@@ -42,7 +42,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<DataResult<UserResponse>> register(@Valid @RequestBody RegisterRequest registerRequest) {
-        var result = authService.register(registerRequest);
+        DataResult<UserResponse> result = authService.register(registerRequest);
         if (!result.isSuccess()) {
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
