@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>C:/Users/ahmet/Desktop/java-workspace/final-java-backend</OriginalElement>
+  <nodes>
+    <node x="36.000000000000455" y="1678.0">com.zoothii.finaljavabackend.data_access.abstracts.ProductDao</node>
+    <node x="3140.9583333333358" y="2368.0">com.zoothii.finaljavabackend.api.controllers.RolesController</node>
+    <node x="4243.7826362484175" y="1156.0">com.zoothii.finaljavabackend.core.utulities.security.token.TokenUtils</node>
+    <node x="5664.958333333336" y="2368.0">com.zoothii.finaljavabackend.core.utulities.security.token.jwt.AuthTokenFilter</node>
+    <node x="4800.958333333336" y="2379.0">com.zoothii.finaljavabackend.api.controllers.AuthController</node>
+    <node x="5352.958333333336" y="2324.0">com.zoothii.finaljavabackend.business.concretes.UserManager</node>
+    <node x="4647.5326362484175" y="1732.0">com.zoothii.finaljavabackend.core.utulities.security.services.UserDetailsServiceImpl</node>
+    <node x="128.0326362484193" y="924.0">com.zoothii.finaljavabackend.entities.concretes.Product</node>
+    <node x="3692.9583333333358" y="2390.0">com.zoothii.finaljavabackend.api.controllers.UsersController</node>
+    <node x="531.1666666666665" y="2258.0">com.zoothii.finaljavabackend.api.controllers.ProductsController</node>
+    <node x="2008.0" y="2987.0">com.zoothii.finaljavabackend.FinalJavaBackendApplicationTests</node>
+    <node x="149.0326362484193" y="385.0">com.zoothii.finaljavabackend.entities.concretes.Category</node>
+    <node x="3650.6576362484175" y="957.0">com.zoothii.finaljavabackend.entities.payload.response.UserResponse</node>
+    <node x="1148.5351711026633" y="1755.0">com.zoothii.finaljavabackend.core.data_access.RoleDao</node>
+    <node x="2596.333333333334" y="517.0">com.zoothii.finaljavabackend.core.utulities.results.Result</node>
+    <node x="5738.83079847909" y="352.0">com.zoothii.finaljavabackend.core.entities.User</node>
+    <node x="1780.0" y="2987.0">com.zoothii.finaljavabackend.api.controllers.TestController</node>
+    <node x="1153.0" y="2987.0">MavenWrapperDownloader</node>
+    <node x="4244.958333333336" y="2335.0">com.zoothii.finaljavabackend.business.concretes.AuthManager</node>
+    <node x="3768.9076362484175" y="1744.0">com.zoothii.finaljavabackend.business.abstracts.AuthService</node>
+    <node x="5843.500000000002" y="1156.0">com.zoothii.finaljavabackend.core.data_access.UserDao</node>
+    <node x="506.0326362484193" y="1023.0">com.zoothii.finaljavabackend.entities.dtos.ProductCategoryDetailsDto</node>
+    <node x="4320.5326362484175" y="1688.0">com.zoothii.finaljavabackend.core.utulities.security.token.jwt.JwtUtils</node>
+    <node x="452.9166666666665" y="1612.0">com.zoothii.finaljavabackend.business.abstracts.ProductService</node>
+    <node x="0.0" y="2987.0">com.zoothii.finaljavabackend.core.utulities.security.services.UserDetailsImpl</node>
+    <node x="1488.0833333333337" y="1722.0">com.zoothii.finaljavabackend.core.utulities.results.SuccessDataResult</node>
+    <node x="1976.8333333333337" y="1722.0">com.zoothii.finaljavabackend.core.utulities.results.ErrorDataResult</node>
+    <node x="908.0" y="2987.0">com.zoothii.finaljavabackend.entities.payload.request.LoginRequest</node>
+    <node x="2574.6576362484175" y="1678.0">com.zoothii.finaljavabackend.business.abstracts.UserService</node>
+    <node x="3681.70579847909" y="0.0">com.zoothii.finaljavabackend.core.entities.Role</node>
+    <node x="3328.2826362484193" y="2708.0">com.zoothii.finaljavabackend.core.utulities.security.WebSecurityConfig</node>
+    <node x="2820.4076362484175" y="1167.0">com.zoothii.finaljavabackend.core.utulities.results.ErrorResult</node>
+    <node x="2180.833333333334" y="1711.0">com.zoothii.finaljavabackend.business.abstracts.RoleService</node>
+    <node x="0.0" y="2258.0">com.zoothii.finaljavabackend.business.concretes.ProductManager</node>
+    <node x="2988.4076362484175" y="1167.0">com.zoothii.finaljavabackend.core.utulities.results.SuccessResult</node>
+    <node x="1827.7826362484193" y="2390.0">com.zoothii.finaljavabackend.core.utulities.security.token.jwt.AuthEntryPointJwt</node>
+    <node x="1737.3333333333337" y="1144.0">com.zoothii.finaljavabackend.core.utulities.results.DataResult</node>
+    <node x="545.0" y="2987.0">com.zoothii.finaljavabackend.entities.payload.request.RegisterRequest</node>
+    <node x="3781.708333333334" y="418.0">com.zoothii.finaljavabackend.core.utulities.security.token.AccessToken</node>
+    <node x="1484.0" y="2987.0">com.zoothii.finaljavabackend.FinalJavaBackendApplication</node>
+    <node x="1246.4583333333335" y="2357.0">com.zoothii.finaljavabackend.business.concretes.RoleManager</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.zoothii.finaljavabackend.business.concretes.AuthManager" target="com.zoothii.finaljavabackend.business.abstracts.AuthService" relationship="REALIZATION">
+      <point x="178.66666666666697" y="-117.0" />
+      <point x="4691.625000000002" y="2076.0" />
+      <point x="3823.574302915084" y="2076.0" />
+      <point x="-109.33333333333348" y="39.0" />
+    </edge>
+    <edge source="com.zoothii.finaljavabackend.business.concretes.UserManager" target="com.zoothii.finaljavabackend.business.abstracts.UserService" relationship="REALIZATION">
+      <point x="-97.33333333333303" y="-128.0" />
+      <point x="5401.625000000002" y="2036.0" />
+      <point x="2817.9909695817505" y="2036.0" />
+      <point x="97.33333333333303" y="105.0" />
+    </edge>
+    <edge source="com.zoothii.finaljavabackend.business.concretes.ProductManager" target="com.zoothii.finaljavabackend.business.abstracts.ProductService" relationship="REALIZATION">
+      <point x="150.66666666666663" y="-194.0" />
+      <point x="376.6666666666665" y="2236.0" />
+      <point x="528.25" y="2236.0" />
+      <point x="-150.66666666666663" y="171.0" />
+    </edge>
+    <edge source="com.zoothii.finaljavabackend.core.utulities.results.SuccessDataResult" target="com.zoothii.finaljavabackend.core.utulities.results.DataResult" relationship="GENERALIZATION">
+      <point x="0.0" y="-61.0" />
+      <point x="1589.0833333333337" y="1590.0" />
+      <point x="1711.0833333333337" y="1590.0" />
+      <point x="1711.0833333333337" y="1530.0" />
+      <point x="1789.3333333333337" y="1530.0" />
+      <point x="-52.0" y="62.0" />
+    </edge>
+    <edge source="com.zoothii.finaljavabackend.core.utulities.results.ErrorResult" target="com.zoothii.finaljavabackend.core.utulities.results.Result" relationship="GENERALIZATION">
+      <point x="0.0" y="-39.0" />
+      <point x="2894.4076362484175" y="902.0" />
+      <point x="2725.333333333334" y="902.0" />
+      <point x="43.0" y="84.0" />
+    </edge>
+    <edge source="com.zoothii.finaljavabackend.business.concretes.RoleManager" target="com.zoothii.finaljavabackend.business.abstracts.RoleService" relationship="REALIZATION">
+      <point x="90.33333333333348" y="-95.0" />
+      <point x="1472.291666666667" y="2216.0" />
+      <point x="2226.0" y="2216.0" />
+      <point x="-90.33333333333348" y="72.0" />
+    </edge>
+    <edge source="com.zoothii.finaljavabackend.core.utulities.results.ErrorDataResult" target="com.zoothii.finaljavabackend.core.utulities.results.DataResult" relationship="GENERALIZATION">
+      <point x="0.0" y="-61.0" />
+      <point x="2068.833333333334" y="1590.0" />
+      <point x="1711.0833333333337" y="1590.0" />
+      <point x="1711.0833333333337" y="1530.0" />
+      <point x="1789.3333333333337" y="1530.0" />
+      <point x="-52.0" y="62.0" />
+    </edge>
+    <edge source="com.zoothii.finaljavabackend.core.utulities.security.token.jwt.JwtUtils" target="com.zoothii.finaljavabackend.core.utulities.security.token.TokenUtils" relationship="REALIZATION">
+      <point x="-76.75" y="-95.0" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="com.zoothii.finaljavabackend.core.utulities.results.SuccessResult" target="com.zoothii.finaljavabackend.core.utulities.results.Result" relationship="GENERALIZATION">
+      <point x="0.0" y="-39.0" />
+      <point x="3070.4076362484175" y="902.0" />
+      <point x="2725.333333333334" y="902.0" />
+      <point x="43.0" y="84.0" />
+    </edge>
+    <edge source="com.zoothii.finaljavabackend.core.utulities.results.DataResult" target="com.zoothii.finaljavabackend.core.utulities.results.Result" relationship="GENERALIZATION">
+      <point x="0.0" y="-62.0" />
+      <point x="1841.3333333333337" y="902.0" />
+      <point x="2725.333333333334" y="902.0" />
+      <point x="43.0" y="84.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.6846988738371144" showDependencies="false" x="1040.0966592374527" y="2092.2384053562623" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

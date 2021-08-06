@@ -1,10 +1,12 @@
 package com.zoothii.finaljavabackend.core.utulities.security.services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.zoothii.finaljavabackend.core.entities.Role;
 import com.zoothii.finaljavabackend.core.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,7 +37,15 @@ public class UserDetailsImpl implements UserDetails {
 	}
 
 	public static UserDetailsImpl build(User user) {
-		List<GrantedAuthority> authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+
+		//List<GrantedAuthority> authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+		// equivalent
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		for (Role role : user.getRoles()) {
+			SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role.getName());
+			authorities.add(simpleGrantedAuthority);
+		}
+
 		return new UserDetailsImpl(
 				user.getId(), 
 				user.getUsername(), 
