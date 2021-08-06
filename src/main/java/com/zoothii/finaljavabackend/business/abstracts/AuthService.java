@@ -7,9 +7,6 @@ import com.zoothii.finaljavabackend.entities.payload.response.UserResponse;
 
 public interface AuthService {
     DataResult<UserResponse> register(RegisterRequest registerRequest);
-    DataResult<UserResponse> login(LoginRequest loginRequest);
 
-    // todo these methods will be moved to userService after creating
-    //Result checkIfUserNameExists(String userName);
-    //Result checkIfEmailExists(String email);
+    DataResult<UserResponse> login(LoginRequest loginRequest);
 }

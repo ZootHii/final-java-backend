@@ -10,7 +10,7 @@ import javax.persistence.NamedQuery;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Integer> {
+public interface ProductDao extends JpaRepository<Product, Integer> {
     Product getByProductName(String productName);
 
     Product getByProductNameAndCategoryId(String productName, int categoryId);

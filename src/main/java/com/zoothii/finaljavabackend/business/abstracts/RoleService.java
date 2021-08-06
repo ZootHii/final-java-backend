@@ -12,4 +12,9 @@ public interface RoleService {
 
     Result createRole(Role role);
 
+    DataResult<Role> getRoleByName(String name);
+
+    Result checkIfRoleExists(String role);
+
+    Result checkIfRoleIsNotExists(String role);
 }

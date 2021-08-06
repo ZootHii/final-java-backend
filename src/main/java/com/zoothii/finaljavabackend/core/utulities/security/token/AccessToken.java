@@ -1,4 +1,4 @@
-package com.zoothii.finaljavabackend.core.utulities.security.jwt;
+package com.zoothii.finaljavabackend.core.utulities.security.token;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

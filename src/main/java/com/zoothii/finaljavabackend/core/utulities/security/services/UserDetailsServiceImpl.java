@@ -1,6 +1,6 @@
 package com.zoothii.finaljavabackend.core.utulities.security.services;
 
-import com.zoothii.finaljavabackend.core.data_access.UserRepository;
+import com.zoothii.finaljavabackend.core.data_access.UserDao;
 import com.zoothii.finaljavabackend.core.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,18 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-	final
-	UserRepository userRepository;
+	final private UserDao userDao;
 
 	@Autowired
-	public UserDetailsServiceImpl(UserRepository userRepository) {
-		this.userRepository = userRepository;
+	public UserDetailsServiceImpl(UserDao userDao) {
+		this.userDao = userDao;
 	}
 
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+		User user = userDao.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
 		return UserDetailsImpl.build(user);
 	}

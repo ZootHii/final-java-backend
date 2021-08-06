@@ -1,8 +1,10 @@
-package com.zoothii.finaljavabackend.core.utulities.security.jwt;
+package com.zoothii.finaljavabackend.core.utulities.security.token.jwt;
 
 import java.util.Date;
 
 import com.zoothii.finaljavabackend.core.utulities.security.services.UserDetailsImpl;
+import com.zoothii.finaljavabackend.core.utulities.security.token.AccessToken;
+import com.zoothii.finaljavabackend.core.utulities.security.token.TokenUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,43 +14,43 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.*;
 
 @Component
-public class JwtUtils {
+public class JwtUtils implements TokenUtils {
 	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-	@Value("${jwt.secret}")
-	private String jwtSecret;
+	@Value("${token.secret}")
+	private String tokenSecret;
 
-	@Value("${jwt.expiration}")
-	private int jwtExpirationMs;
+	@Value("${token.expiration}")
+	private int tokenExpiration;
 
-	public AccessToken generateJwtToken(Authentication authentication) {
+	public AccessToken createAccessToken(Authentication authentication) {
 
 		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-		Date expiration = new Date((new Date()).getTime() + jwtExpirationMs);
-		String jwts = Jwts.builder()
+		Date expiration = new Date((new Date()).getTime() + tokenExpiration);
+		String token = Jwts.builder()
 				.setSubject((userPrincipal.getUsername()))
 				.setIssuedAt(new Date())
 				.setExpiration(expiration)
-				.signWith(SignatureAlgorithm.HS512, jwtSecret)
+				.signWith(SignatureAlgorithm.HS512, tokenSecret)
 				.compact();
-		return new AccessToken(jwts, expiration);
+		return new AccessToken(token, expiration);
 	}
 
-	public String getUserNameFromJwtToken(String token) {
+	public String getUserNameFromAccessToken(String accessToken) {
 		return Jwts
 				.parser()
-				.setSigningKey(jwtSecret)
-				.parseClaimsJws(token)
+				.setSigningKey(tokenSecret)
+				.parseClaimsJws(accessToken)
 				.getBody()
 				.getSubject();
 	}
 
-	public boolean validateJwtToken(String authToken) {
+	public boolean validateAccessToken(String accessToken) {
 		try {
 			Jwts
 				.parser()
-				.setSigningKey(jwtSecret)
-				.parseClaimsJws(authToken);
+				.setSigningKey(tokenSecret)
+				.parseClaimsJws(accessToken);
 			return true;
 		} catch (SignatureException e) {
 			logger.error("Invalid JWT signature: {}", e.getMessage());

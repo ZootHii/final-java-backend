@@ -1,7 +1,6 @@
 package com.zoothii.finaljavabackend.entities.payload.response;
 
-import com.zoothii.finaljavabackend.core.utulities.security.jwt.AccessToken;
-import lombok.AllArgsConstructor;
+import com.zoothii.finaljavabackend.core.utulities.security.token.AccessToken;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 public class UserResponse {
 	private AccessToken accessToken;
-	//private String type = "Bearer";
 	private Long id;
 	private String username;
 	private String email;

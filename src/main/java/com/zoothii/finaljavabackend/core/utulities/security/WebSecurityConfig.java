@@ -1,9 +1,10 @@
 package com.zoothii.finaljavabackend.core.utulities.security;
 
-import com.zoothii.finaljavabackend.core.utulities.security.jwt.AuthEntryPointJwt;
-import com.zoothii.finaljavabackend.core.utulities.security.jwt.AuthTokenFilter;
+import com.zoothii.finaljavabackend.core.utulities.security.token.jwt.AuthEntryPointJwt;
+import com.zoothii.finaljavabackend.core.utulities.security.token.jwt.AuthTokenFilter;
 import com.zoothii.finaljavabackend.core.utulities.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,8 +15,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Configuration
@@ -26,6 +33,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 		// jsr250Enabled = true,
 		prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Value("${password.salt}")
+    private String salt;
+
 	private final UserDetailsServiceImpl userDetailsService;
 	private final AuthEntryPointJwt unauthorizedHandler;
 
@@ -53,7 +64,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+		Map<String, PasswordEncoder> encoders = new HashMap<>();
+		Pbkdf2PasswordEncoder pbkdf2Pe = new Pbkdf2PasswordEncoder(salt);
+		pbkdf2Pe.setAlgorithm(Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA512);
+		encoders.put("pbkdf2", pbkdf2Pe);
+		encoders.put("bcrypt", new BCryptPasswordEncoder());
+		return new DelegatingPasswordEncoder("pbkdf2", encoders);
 	}
 
 	@Override
@@ -68,7 +84,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				//.antMatchers("/swagger-ui.html/**").permitAll()
 				.anyRequest().authenticated();
 
-		// TODO /swagger-ui.html#/auth-controller/ give access
 
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
