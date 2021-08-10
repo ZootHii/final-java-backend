@@ -22,7 +22,6 @@ import java.util.List;
 
 @SpringBootApplication
 @EnableSwagger2
-@EnableCaching
 public class FinalJavaBackendApplication {
 
 	public static void main(String[] args) {

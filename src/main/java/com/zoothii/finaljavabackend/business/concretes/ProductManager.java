@@ -1,6 +1,7 @@
 package com.zoothii.finaljavabackend.business.concretes;
 
 import com.zoothii.finaljavabackend.business.abstracts.ProductService;
+import com.zoothii.finaljavabackend.core.utulities.constants.Messages;
 import com.zoothii.finaljavabackend.core.utulities.results.DataResult;
 import com.zoothii.finaljavabackend.core.utulities.results.Result;
 import com.zoothii.finaljavabackend.core.utulities.results.SuccessDataResult;
@@ -35,7 +36,7 @@ public class ProductManager implements ProductService {
     @Override
     @Cacheable(key = "'products-cache'") // caches the result
     public DataResult<List<Product>> getProducts() {
-        return new SuccessDataResult<>(this.productDao.findAll(), "products returned successfully");
+        return new SuccessDataResult<>(this.productDao.findAll(), Messages.successGetProducts);
     }
 
     @Override
@@ -43,14 +44,14 @@ public class ProductManager implements ProductService {
     public Result createProduct(Product product) {
         Product productToSave = this.productDao.save(product);
         Product productSaved = this.productDao.findById(productToSave.getId()).get();
-        return new SuccessResult("product saved successfully"  + productToSave.getCategory().getCategoryName() + productSaved.getCategory().getCategoryName());
+        return new SuccessResult(Messages.successCreateProduct + productToSave.getCategory().getCategoryName() + productSaved.getCategory().getCategoryName());
     }
 
     @Override
     @CacheEvict(key = "'products-cache'", condition = "#result.success")// removes data from cache all data
     public Result deleteProduct(Product product) {
         this.productDao.delete(product);
-        return new SuccessResult("product deleted successfully");
+        return new SuccessResult(Messages.successDeleteProduct);
     }
 
     @Override

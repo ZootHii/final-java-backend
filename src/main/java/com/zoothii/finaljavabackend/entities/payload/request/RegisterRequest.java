@@ -20,7 +20,8 @@ public class RegisterRequest {
     @Size(max = 50)
     @Email
     private String email;
-    
+
+    // todo set<Role> olarak değiştirilebilir
     private Set<String> roles;
     
     @NotBlank

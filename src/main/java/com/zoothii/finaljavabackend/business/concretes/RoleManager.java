@@ -73,18 +73,18 @@ public class RoleManager implements RoleService {
     @Override
     public Result checkIfRoleExists(String role) {
         if (roleDao.getRoleByName(role) == null) {
-            return new ErrorResult("Role " + role + " is not exists.");
+            return new ErrorResult(Messages.errorCheckIfRoleExists(role));
         }
-        return new SuccessResult("Role " + role + " is exists.");
+        return new SuccessResult(Messages.successCheckIfRoleExists(role));
     }
 
     @Override
     public Result createDefaultRoleIfNotExists(String defaultRole) {
         if (roleDao.getRoleByName(defaultRole) != null){
-            return new ErrorResult("Default role " + defaultRole + " is already exists.");
+            return new ErrorResult(Messages.errorCreateDefaultRoleIfNotExists(defaultRole));
         }
 
         roleDao.save(new Role(0, defaultRole));
-        return new SuccessResult("Default role " + defaultRole + " is successfully created.");
+        return new SuccessResult(Messages.successCreateDefaultRoleIfNotExists(defaultRole));
     }
 }

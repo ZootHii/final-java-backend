@@ -1,23 +1,30 @@
 package com.zoothii.finaljavabackend.business.concretes;
 
 
+import com.zoothii.finaljavabackend.business.abstracts.RoleService;
 import com.zoothii.finaljavabackend.business.abstracts.UserService;
 import com.zoothii.finaljavabackend.core.data_access.UserDao;
+import com.zoothii.finaljavabackend.core.entities.Role;
 import com.zoothii.finaljavabackend.core.entities.User;
+import com.zoothii.finaljavabackend.core.utulities.constants.Roles;
 import com.zoothii.finaljavabackend.core.utulities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserManager implements UserService {
 
     private final UserDao userDao;
+    private final RoleService roleService;
 
     @Autowired
-    public UserManager(UserDao userDao) {
+    public UserManager(UserDao userDao, RoleService roleService) {
         this.userDao = userDao;
+        this.roleService = roleService;
     }
 
     @Override
@@ -53,10 +60,53 @@ public class UserManager implements UserService {
         return new SuccessDataResult<>(user);
     }
 
+    @Override
+    public Result setRolesToUser(String username, Set<Role> roles) {
+        var user = this.userDao.getUserByUsername(username);
+
+        Set<String> strRoles = new HashSet<>();
+
+        for (Role role: roles) {
+            var resultCheckIfRoleExists = roleService.checkIfRoleExists(role.getName());
+            if (resultCheckIfRoleExists.isSuccess()){
+                strRoles.add(role.getName());
+            } else {
+                return new ErrorResult(resultCheckIfRoleExists.getMessage());
+            }
+        }
+
+        if (!strRoles.contains(Roles.ROLE_USER)){
+            var resultDefaultRole = roleService.getRoleByName(Roles.ROLE_USER);
+            roles.add(resultDefaultRole.getData());
+        }
+
+        user.setRoles(roles);
+        userDao.save(user);
+        return new SuccessResult("roles set to user");
+    }
+
+    @Override
+    public Result setNewRolesToUser(String username, Set<Role> roles) {
+
+        for (Role role: roles) {
+            var resultCheckIfRoleExists = roleService.checkIfRoleExists(role.getName());
+            if (!resultCheckIfRoleExists.isSuccess()){
+                return new ErrorResult(resultCheckIfRoleExists.getMessage());
+            }
+        }
+
+        var user = this.userDao.getUserByUsername(username);
+        var userRoles = user.getRoles();
+        userRoles.addAll(roles);
+        user.setRoles(userRoles);
+        userDao.save(user);
+        return new SuccessResult("new roles set to user");
+    }
+
     // *** BUSINESS RULES ***
     @Override
     public Result checkIfUsernameExists(String username) {
-        User user = this.userDao.getUserByUsername(username);
+        var user = this.userDao.getUserByUsername(username);
         if (user == null) {
             return new ErrorResult("Username is not exists.");
         }

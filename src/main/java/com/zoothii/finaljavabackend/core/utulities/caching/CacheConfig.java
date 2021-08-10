@@ -17,14 +17,14 @@ public class CacheConfig extends CachingConfigurerSupport {
         var tenSecondsCache = new CacheConfiguration();
         tenSecondsCache.setName("ten-seconds-cache");
         //tenSecondsCache.setMemoryStoreEvictionPolicy("LRU"); // default LRU so can be commented
-        tenSecondsCache.setMaxEntriesLocalHeap(1000);
+        tenSecondsCache.setMaxEntriesLocalHeap(10000);
         tenSecondsCache.setTimeToLiveSeconds(10);
 
         var tenMinutesCache = new CacheConfiguration();
         tenMinutesCache.setName("ten-minutes-cache");
         //tenMinutesCache.setMemoryStoreEvictionPolicy("LRU");
-        tenMinutesCache.setMaxEntriesLocalHeap(1000);
-        tenMinutesCache.setTimeToLiveSeconds(10000);
+        tenMinutesCache.setMaxEntriesLocalHeap(10000);
+        tenMinutesCache.setTimeToLiveSeconds(600);
 
         var config = new net.sf.ehcache.config.Configuration();
         config.addCache(tenSecondsCache);

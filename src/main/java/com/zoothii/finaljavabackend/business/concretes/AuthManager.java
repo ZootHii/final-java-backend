@@ -5,6 +5,7 @@ import com.zoothii.finaljavabackend.business.abstracts.RoleService;
 import com.zoothii.finaljavabackend.business.abstracts.UserService;
 import com.zoothii.finaljavabackend.core.entities.Role;
 import com.zoothii.finaljavabackend.core.entities.User;
+import com.zoothii.finaljavabackend.core.utulities.constants.Messages;
 import com.zoothii.finaljavabackend.core.utulities.constants.Roles;
 import com.zoothii.finaljavabackend.core.utulities.results.*;
 import com.zoothii.finaljavabackend.core.utulities.security.token.AccessToken;
@@ -59,7 +60,7 @@ public class AuthManager implements AuthService {
 
         // Create new user's account and hash password
         User user = new User(registerRequest.getUsername(), registerRequest.getEmail(), passwordEncoder.encode(registerRequest.getPassword()));
-        Set<String> strRoles = registerRequest.getRoles();
+        Set<String> strRoles = registerRequest.getRoles(); // todo rolleri direkt Set<Role> olarak gelmesi sağlanabilir
         Set<Role> roles = new HashSet<>();
 
         // set requested roles checking from database for security
@@ -87,23 +88,37 @@ public class AuthManager implements AuthService {
         // set requested roles and save
         user.setRoles(roles);
         userService.createUser(user);
-        return new SuccessDataResult<>(generateJwtResponseUsernamePassword(registerRequest.getUsername(), registerRequest.getPassword()), "User registered successfully!");
+        return new SuccessDataResult<>(generateJwtResponseUsernamePassword(registerRequest.getUsername(), registerRequest.getPassword()), Messages.successRegister);
     }
 
     @Override
     public DataResult<UserResponse> login(LoginRequest loginRequest) {
         // check username exist from service
-        Result resultUserNameExists = userService.checkIfUsernameExists(loginRequest.getUsername());
+        var resultUserNameExists = userService.checkIfUsernameExists(loginRequest.getUsername());
         if (!resultUserNameExists.isSuccess()) {
             return new ErrorDataResult<>(resultUserNameExists.getMessage());
         }
 
         // check password true for the user
-        DataResult<User> result = userService.getUserByUsername(loginRequest.getUsername());
-        if (!passwordEncoder.matches(loginRequest.getPassword(), result.getData().getPassword())) {
-            return new ErrorDataResult<>("Password is not correct.");
+        var resultDataUser = userService.getUserByUsername(loginRequest.getUsername());
+        var resultPassword = checkIfPasswordCorrect(loginRequest.getPassword(), resultDataUser.getData().getPassword());
+        if (!resultPassword.isSuccess()){
+            return new ErrorDataResult<>(resultPassword.getMessage());
         }
-        return new SuccessDataResult<>(generateJwtResponseUsernamePassword(loginRequest.getUsername(), loginRequest.getPassword()), "User logged in successfully!");
+
+//        if (!passwordEncoder.matches(loginRequest.getPassword(), result.getData().getPassword())) {
+//            return new ErrorDataResult<>("Password is not correct.");
+//        }
+        return new SuccessDataResult<>(generateJwtResponseUsernamePassword(loginRequest.getUsername(), loginRequest.getPassword()), Messages.successLogin);
+    }
+
+    @Override
+    public Result checkIfPasswordCorrect(String requestedPassword, String encryptedPassword) {
+        if (!passwordEncoder.matches(requestedPassword, encryptedPassword)){
+            return new ErrorResult(Messages.errorPassword);
+        }
+
+        return new SuccessResult(Messages.successPassword);
     }
 
     // authenticate user and return jwt as response
