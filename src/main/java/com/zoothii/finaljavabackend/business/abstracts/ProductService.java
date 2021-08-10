@@ -12,6 +12,8 @@ public interface ProductService {
 
     Result createProduct(Product product);
 
+    Result deleteProduct(Product product);
+
     DataResult<Product> getByProductName(String productName);
 
     DataResult<Product> getById(int productId);

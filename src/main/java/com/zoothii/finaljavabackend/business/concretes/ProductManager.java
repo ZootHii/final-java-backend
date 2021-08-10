@@ -9,6 +9,10 @@ import com.zoothii.finaljavabackend.data_access.abstracts.ProductDao;
 import com.zoothii.finaljavabackend.entities.concretes.Product;
 import com.zoothii.finaljavabackend.entities.dtos.ProductCategoryDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = {"products"}) // tells where to store cached data
 public class ProductManager implements ProductService {
 
     //@Autowired // this works too but if we have multiple services we can use constructor with only 1 Autowired
@@ -28,15 +33,24 @@ public class ProductManager implements ProductService {
     }
 
     @Override
+    @Cacheable(key = "'products-cache'") // caches the result
     public DataResult<List<Product>> getProducts() {
         return new SuccessDataResult<>(this.productDao.findAll(), "products returned successfully");
     }
 
     @Override
+    @CacheEvict(key = "'products-cache'", condition = "#result.success")
     public Result createProduct(Product product) {
         Product productToSave = this.productDao.save(product);
         Product productSaved = this.productDao.findById(productToSave.getId()).get();
         return new SuccessResult("product saved successfully"  + productToSave.getCategory().getCategoryName() + productSaved.getCategory().getCategoryName());
+    }
+
+    @Override
+    @CacheEvict(key = "'products-cache'", condition = "#result.success")// removes data from cache all data
+    public Result deleteProduct(Product product) {
+        this.productDao.delete(product);
+        return new SuccessResult("product deleted successfully");
     }
 
     @Override

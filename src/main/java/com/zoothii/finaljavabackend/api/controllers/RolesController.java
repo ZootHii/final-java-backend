@@ -5,6 +5,7 @@ import com.zoothii.finaljavabackend.core.entities.Role;
 import com.zoothii.finaljavabackend.core.utulities.results.DataResult;
 import com.zoothii.finaljavabackend.core.utulities.results.ErrorDataResult;
 import com.zoothii.finaljavabackend.core.utulities.results.Result;
+import com.zoothii.finaljavabackend.entities.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,19 +30,27 @@ public class RolesController {
     }
 
     @GetMapping("roles")
-    public DataResult<List<Role>> getRoles() {
-        return roleService.getRoles();
+    public ResponseEntity<DataResult<List<Role>>> getRoles() throws InterruptedException {
+        var result = roleService.getRoles();
+        if (!result.isSuccess()) {
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
-//    @PostMapping("role")
-//    public Result createRole(@Valid @RequestBody Role role){
-//        return roleService.createRole(role);
-//    }
 
     @PostMapping("role")
     public ResponseEntity<Result> createRole(@Valid @RequestBody Role role) {
         var result = roleService.createRole(role);
         if (!result.isSuccess()) {
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping("role")
+    public ResponseEntity<Result> deleteRole(@Valid @RequestBody Role role) {
+        var result = this.roleService.deleteRole(role);
+        if (!result.isSuccess()){
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);

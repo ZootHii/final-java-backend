@@ -5,6 +5,7 @@ import com.zoothii.finaljavabackend.business.abstracts.RoleService;
 import com.zoothii.finaljavabackend.business.abstracts.UserService;
 import com.zoothii.finaljavabackend.core.entities.Role;
 import com.zoothii.finaljavabackend.core.entities.User;
+import com.zoothii.finaljavabackend.core.utulities.constants.Roles;
 import com.zoothii.finaljavabackend.core.utulities.results.*;
 import com.zoothii.finaljavabackend.core.utulities.security.token.AccessToken;
 import com.zoothii.finaljavabackend.core.utulities.security.token.jwt.JwtUtils;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -62,26 +64,33 @@ public class AuthManager implements AuthService {
 
         // set requested roles checking from database for security
         if (strRoles == null) {
-            // TODO default ROLE_USER ekle database de yoksa önce database e ekle işlemini yap
-            Result resultRoleIsNotExists = roleService.checkIfRoleIsNotExists("ROLE_USER");
+//            Result resultRoleIsNotExists = roleService.checkIfRoleIsNotExists(Roles.ROLE_USER);
+//
+//            if (resultRoleIsNotExists.isSuccess()) {
+//                // if not exists create default role
+//                return new ErrorDataResult<>(resultRoleIsNotExists.getMessage());
+//            }
 
-            if (resultRoleIsNotExists.isSuccess()) {
-                return new ErrorDataResult<>(resultRoleIsNotExists.getMessage());
-            }
-
-            roles.add(roleService.getRoleByName("ROLE_USER").getData());
+            roleService.createDefaultRoleIfNotExists(Roles.ROLE_USER);
+            roles.add(roleService.getRoleByName(Roles.ROLE_USER).getData());
 
         } else {
             for (String role : strRoles) {
-                Result resultRoleExists = roleService.checkIfRoleExists(role);
+
+                // admin not exists create
+                if (Objects.equals(role, Roles.ROLE_ADMIN)){
+                    roleService.createDefaultRoleIfNotExists(role);
+                }
+
+                var resultRoleExists = roleService.checkIfRoleExists(role);
                 if (resultRoleExists.isSuccess()) {
-                    Role roleToAdd = roleService.getRoleByName(role).getData();
+                    var roleToAdd = roleService.getRoleByName(role).getData();
                     roles.add(roleToAdd);
                 }
-                Result resultRoleIsNotExists = roleService.checkIfRoleIsNotExists(role);
-                if (resultRoleIsNotExists.isSuccess()){
-                    return new ErrorDataResult<>(resultRoleIsNotExists.getMessage());
-                }
+                //Result resultRoleIsNotExists = roleService.checkIfRoleIsNotExists(role);
+                //if (resultRoleIsNotExists.isSuccess()){
+                    return new ErrorDataResult<>(resultRoleExists.getMessage());
+                //}
             }
         }
         // set requested roles and save
@@ -93,9 +102,9 @@ public class AuthManager implements AuthService {
     @Override
     public DataResult<UserResponse> login(LoginRequest loginRequest) {
         // check username exist from service
-        Result resultUserNameIsNotExists = userService.checkIfUsernameIsNotExists(loginRequest.getUsername());
-        if (resultUserNameIsNotExists.isSuccess()) {
-            return new ErrorDataResult<>(resultUserNameIsNotExists.getMessage());
+        Result resultUserNameExists = userService.checkIfUsernameExists(loginRequest.getUsername());
+        if (!resultUserNameExists.isSuccess()) {
+            return new ErrorDataResult<>(resultUserNameExists.getMessage());
         }
 
         // check password true for the user

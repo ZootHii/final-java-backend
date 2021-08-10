@@ -20,7 +20,6 @@ public class Role {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	//@Enumerated(EnumType.STRING)
 	@Pattern(regexp = "^ROLE_.*$", message = "Role name must start with ROLE_")
 	@NotBlank
 	@Column(length = 20)

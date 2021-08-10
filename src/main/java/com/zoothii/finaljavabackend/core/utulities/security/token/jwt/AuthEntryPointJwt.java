@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Component
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
+    //private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
     private final Gson gson = new Gson();
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        logger.error("Unauthorized error: {}", authException.getMessage());
+        //logger.error("Unauthorized error: {}", authException.getMessage());
         //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
 
         // return custom error result instead of default sendError

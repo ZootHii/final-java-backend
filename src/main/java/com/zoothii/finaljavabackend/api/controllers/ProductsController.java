@@ -8,6 +8,7 @@ import com.zoothii.finaljavabackend.entities.concretes.Product;
 import com.zoothii.finaljavabackend.entities.dtos.ProductCategoryDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -30,13 +31,41 @@ public class ProductsController {
     }
 
     @GetMapping("products")
-    public DataResult<List<Product>> getProducts() {
-        return this.productService.getProducts();
+    public ResponseEntity<DataResult<List<Product>>> getProducts() {
+        var result = this.productService.getProducts();
+        if (!result.isSuccess()){
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
     }
 
     @PostMapping("product")
-    public Result createProduct(@Valid @RequestBody Product product) {
-        return this.productService.createProduct(product);
+    public ResponseEntity<Result> createProduct(@Valid @RequestBody Product product) {
+        var result = this.productService.createProduct(product);
+        if (!result.isSuccess()){
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping("product")
+    public ResponseEntity<Result> deleteProduct(@Valid @RequestBody Product product) {
+        var result = this.productService.deleteProduct(product);
+        if (!result.isSuccess()){
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDataResult<Object> validationExceptionHandler(MethodArgumentNotValidException exception){
+        Map<String, String> validationErrors = new HashMap<>();
+        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()){
+            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+        return new ErrorDataResult<>(validationErrors, "validation errors");
     }
 
     /*@GetMapping("products/{productName}")
@@ -44,7 +73,7 @@ public class ProductsController {
         return this.productService.getByProductName(productName);
     }*/
 
-    @GetMapping("products/{id}")
+    /*@GetMapping("products/{id}")
     public DataResult<Product> getById(@PathVariable int id) {
         return this.productService.getById(id);
     }
@@ -106,7 +135,7 @@ public class ProductsController {
     @GetMapping("products/dto")
     public DataResult<List<ProductCategoryDetailsDto>> getProductCategoryDetails() {
         return this.productService.getProductCategoryDetails();
-    }
+    }*/
 
 
     /*@GetMapping(value = "products", params = {"productName","categoryId"})
@@ -129,17 +158,7 @@ public class ProductsController {
         return findBookById(id);
     }*/
 
-
     // ****** VALIDATION ******
     // todo tek seferlik kullanım haline getir
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorDataResult<Object> validationExceptionHandler(MethodArgumentNotValidException exception){
-        Map<String, String> validationErrors = new HashMap<>();
-        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()){
-            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-        return new ErrorDataResult<>(validationErrors, "validation errors");
-    }
 
 }

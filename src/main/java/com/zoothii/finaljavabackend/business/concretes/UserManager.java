@@ -33,9 +33,9 @@ public class UserManager implements UserService {
 
     @Override
     public DataResult<User> getUserByUsername(String username) {
-        Result resultUsernameIsNotExists = checkIfUsernameIsNotExists(username);
-        if (resultUsernameIsNotExists.isSuccess()){
-            return new ErrorDataResult<>(resultUsernameIsNotExists.getMessage());
+        Result resultUsernameExists = checkIfUsernameExists(username);
+        if (!resultUsernameExists.isSuccess()){
+            return new ErrorDataResult<>(resultUsernameExists.getMessage());
         }
 
         User user = this.userDao.getUserByUsername(username);
@@ -44,9 +44,9 @@ public class UserManager implements UserService {
 
     @Override
     public DataResult<User> getUserByEmail(String email) {
-        Result resultEmailIsNotExists = checkIfEmailIsNotExists(email);
-        if (resultEmailIsNotExists.isSuccess()){
-            return new ErrorDataResult<>(resultEmailIsNotExists.getMessage());
+        Result resultEmailExists = checkIfEmailExists(email);
+        if (!resultEmailExists.isSuccess()){
+            return new ErrorDataResult<>(resultEmailExists.getMessage());
         }
 
         User user = this.userDao.getUserByEmail(email);
@@ -58,35 +58,36 @@ public class UserManager implements UserService {
     public Result checkIfUsernameExists(String username) {
         User user = this.userDao.getUserByUsername(username);
         if (user == null) {
-            return new ErrorResult();
+            return new ErrorResult("Username is not exists.");
         }
         return new SuccessResult("Username is exists.");
     }
 
-    @Override
-    public Result checkIfUsernameIsNotExists(String username) {
-        User user = this.userDao.getUserByUsername(username);
-        if (user != null) {
-            return new ErrorResult();
-        }
-        return new SuccessResult("Username is not exists.");
-    }
+//    @Override
+//    public Result checkIfUsernameIsNotExists(String username) {
+//        User user = this.userDao.getUserByUsername(username);
+//        if (user != null) {
+//            return new ErrorResult();
+//        }
+//        return new SuccessResult("Username is not exists.");
+//    }
 
     @Override
     public Result checkIfEmailExists(String email) {
         User user = this.userDao.getUserByEmail(email);
         if (user == null) {
-            return new ErrorResult();
+            return new ErrorResult("Email is not exists.");
         }
         return new SuccessResult("Email is exists.");
     }
 
-    @Override
-    public Result checkIfEmailIsNotExists(String email) {
-        User user = this.userDao.getUserByEmail(email);
-        if (user != null) {
-            return new ErrorResult();
-        }
-        return new SuccessResult("Email is not exists.");
-    }
+//    @Override
+//    public Result checkIfEmailIsNotExists(String email) {
+//        User user = this.userDao.getUserByEmail(email);
+//        if (user != null) {
+//            return new ErrorResult();
+//        }
+//        return new SuccessResult("Email is not exists.");
+//    }
+
 }

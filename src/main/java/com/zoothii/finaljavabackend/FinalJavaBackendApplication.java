@@ -3,6 +3,7 @@ package com.zoothii.finaljavabackend;
 import org.assertj.core.util.Lists;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import springfox.documentation.builders.PathSelectors;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @SpringBootApplication
 @EnableSwagger2
+@EnableCaching
 public class FinalJavaBackendApplication {
 
 	public static void main(String[] args) {

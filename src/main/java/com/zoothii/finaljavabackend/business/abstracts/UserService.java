@@ -17,9 +17,9 @@ public interface UserService {
 
     Result checkIfUsernameExists(String username);
 
-    Result checkIfUsernameIsNotExists(String username);
+    //Result checkIfUsernameIsNotExists(String username);
 
     Result checkIfEmailExists(String email);
 
-    Result checkIfEmailIsNotExists(String email);
+    //Result checkIfEmailIsNotExists(String email);
 }
