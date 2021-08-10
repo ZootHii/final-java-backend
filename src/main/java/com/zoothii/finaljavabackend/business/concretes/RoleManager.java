@@ -4,7 +4,6 @@ import com.zoothii.finaljavabackend.business.abstracts.RoleService;
 import com.zoothii.finaljavabackend.core.data_access.RoleDao;
 import com.zoothii.finaljavabackend.core.entities.Role;
 import com.zoothii.finaljavabackend.core.utulities.constants.Messages;
-import com.zoothii.finaljavabackend.core.utulities.constants.Roles;
 import com.zoothii.finaljavabackend.core.utulities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -27,7 +26,7 @@ public class RoleManager implements RoleService {
     }
 
     @Override
-    @Cacheable(key = "'roles-cache'")
+    @Cacheable(value = "ten-seconds-cache", key = "'roles-cache'") // ten seconds cache works EhCache
     public DataResult<List<Role>> getRoles() throws InterruptedException {
         Thread.sleep(1000);
         return new SuccessDataResult<>(roleDao.findAll(), Messages.successGetRoles);
@@ -48,7 +47,7 @@ public class RoleManager implements RoleService {
     }
 
     @Override
-    //@PreAuthorize("hasAnyRole('BEN','ADMIN')")
+    @PreAuthorize("hasAnyRole('BEN','ADMIN')")
     @CacheEvict(key = "'roles-cache'", condition = "#result.success")
     public Result deleteRole(Role role) {
         var resultRoleExists = checkIfRoleExists(role.getName());
@@ -70,16 +69,7 @@ public class RoleManager implements RoleService {
         return new SuccessDataResult<>(roleDao.getRoleByName(name), Messages.successGetRoleByName);
     }
 
-
     // *** BUSINESS RULES ***
-//    @Override
-//    public Result checkIfRoleIsNotExists(String role) {
-//        if (roleDao.getRoleByName(role) != null) {
-//            return new ErrorResult("Role " + role + " is exists.");
-//        }
-//        return new SuccessResult("Role " + role + " is not exists.");
-//    }
-
     @Override
     public Result checkIfRoleExists(String role) {
         if (roleDao.getRoleByName(role) == null) {
@@ -90,7 +80,6 @@ public class RoleManager implements RoleService {
 
     @Override
     public Result createDefaultRoleIfNotExists(String defaultRole) {
-        //var defaultRole = Roles.ROLE_USER;
         if (roleDao.getRoleByName(defaultRole) != null){
             return new ErrorResult("Default role " + defaultRole + " is already exists.");
         }

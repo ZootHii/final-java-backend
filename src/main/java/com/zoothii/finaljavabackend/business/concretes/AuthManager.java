@@ -64,12 +64,6 @@ public class AuthManager implements AuthService {
 
         // set requested roles checking from database for security
         if (strRoles == null) {
-//            Result resultRoleIsNotExists = roleService.checkIfRoleIsNotExists(Roles.ROLE_USER);
-//
-//            if (resultRoleIsNotExists.isSuccess()) {
-//                // if not exists create default role
-//                return new ErrorDataResult<>(resultRoleIsNotExists.getMessage());
-//            }
 
             roleService.createDefaultRoleIfNotExists(Roles.ROLE_USER);
             roles.add(roleService.getRoleByName(Roles.ROLE_USER).getData());
@@ -77,8 +71,8 @@ public class AuthManager implements AuthService {
         } else {
             for (String role : strRoles) {
 
-                // admin not exists create
-                if (Objects.equals(role, Roles.ROLE_ADMIN)){
+                // if admin not exists create
+                if (Objects.equals(role, Roles.ROLE_ADMIN)) {
                     roleService.createDefaultRoleIfNotExists(role);
                 }
 
@@ -87,10 +81,7 @@ public class AuthManager implements AuthService {
                     var roleToAdd = roleService.getRoleByName(role).getData();
                     roles.add(roleToAdd);
                 }
-                //Result resultRoleIsNotExists = roleService.checkIfRoleIsNotExists(role);
-                //if (resultRoleIsNotExists.isSuccess()){
-                    return new ErrorDataResult<>(resultRoleExists.getMessage());
-                //}
+                return new ErrorDataResult<>(resultRoleExists.getMessage());
             }
         }
         // set requested roles and save
