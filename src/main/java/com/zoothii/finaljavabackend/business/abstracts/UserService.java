@@ -19,6 +19,8 @@ public interface UserService {
 
     Result setRolesToUser(String username, Set<Role> roles);
 
+    Result deleteUser(User user);
+
     Result setNewRolesToUser(String username, Set<Role> roles);
 
     Result checkIfUsernameExists(String username);

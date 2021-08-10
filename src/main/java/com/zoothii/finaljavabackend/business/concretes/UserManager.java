@@ -9,6 +9,8 @@ import com.zoothii.finaljavabackend.core.entities.User;
 import com.zoothii.finaljavabackend.core.utulities.constants.Roles;
 import com.zoothii.finaljavabackend.core.utulities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -83,6 +85,17 @@ public class UserManager implements UserService {
         user.setRoles(roles);
         userDao.save(user);
         return new SuccessResult("roles set to user");
+    }
+
+    @Override
+    public Result deleteUser(User user) {
+        var resultUsernameExists = checkIfUsernameExists(user.getUsername());
+        if (!resultUsernameExists.isSuccess()) {
+            return new ErrorDataResult<>(resultUsernameExists.getMessage());
+        }
+
+        userDao.delete(user);
+        return new SuccessResult("User is successfully deleted.");
     }
 
     @Override

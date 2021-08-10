@@ -36,6 +36,15 @@ public class UsersController {
         return this.userService.getUsers();
     }
 
+    @DeleteMapping("user")
+    public ResponseEntity<Result> deleteUSer(@Valid @RequestBody User user) {
+        var result = this.userService.deleteUser(user);
+        if (!result.isSuccess()){
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @PostMapping("setnewroles")
     public ResponseEntity<Result> setNewRolesToUser(@RequestParam String username, @RequestBody Set<Role> roles){
         return new ResponseEntity<>(userService.setNewRolesToUser(username, roles), HttpStatus.OK);
