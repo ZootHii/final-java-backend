@@ -1,7 +1,9 @@
 package com.zoothii.finaljavabackend.core.utulities.results;
 
-public class Result {
-    private boolean success;
+import org.springframework.hateoas.RepresentationModel;
+
+public class Result extends RepresentationModel<Result> {
+    private final boolean success;
     private String message;
 
     public Result(boolean success){

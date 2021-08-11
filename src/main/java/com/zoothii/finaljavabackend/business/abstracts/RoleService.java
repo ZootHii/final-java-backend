@@ -11,13 +11,18 @@ public interface RoleService {
 
     DataResult<List<Role>> getRoles() throws InterruptedException;
 
+    DataResult<Role> getRole(Role role);
+
     Result createRole(Role role);
 
     Result deleteRole(Role role);
 
     DataResult<Role> getRoleByName(String name);
 
-    Result checkIfRoleExists(String role);
+    Result checkIfRoleExistsByName(String role);
+
+    Result checkIfRoleExistsById(int id);
+
 
     //Result checkIfRoleIsNotExists(String role);
 

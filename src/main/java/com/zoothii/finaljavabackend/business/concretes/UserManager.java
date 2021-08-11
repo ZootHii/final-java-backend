@@ -9,8 +9,6 @@ import com.zoothii.finaljavabackend.core.entities.User;
 import com.zoothii.finaljavabackend.core.utulities.constants.Roles;
 import com.zoothii.finaljavabackend.core.utulities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -69,7 +67,7 @@ public class UserManager implements UserService {
         Set<String> strRoles = new HashSet<>();
 
         for (Role role: roles) {
-            var resultCheckIfRoleExists = roleService.checkIfRoleExists(role.getName());
+            var resultCheckIfRoleExists = roleService.checkIfRoleExistsByName(role.getName());
             if (resultCheckIfRoleExists.isSuccess()){
                 strRoles.add(role.getName());
             } else {
@@ -100,9 +98,9 @@ public class UserManager implements UserService {
 
     @Override
     public Result setNewRolesToUser(String username, Set<Role> roles) {
-
+        // TODO change set<String> accordingly
         for (Role role: roles) {
-            var resultCheckIfRoleExists = roleService.checkIfRoleExists(role.getName());
+            var resultCheckIfRoleExists = roleService.checkIfRoleExistsByName(role.getName());
             if (!resultCheckIfRoleExists.isSuccess()){
                 return new ErrorResult(resultCheckIfRoleExists.getMessage());
             }

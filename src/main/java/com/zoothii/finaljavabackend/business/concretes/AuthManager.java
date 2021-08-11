@@ -37,7 +37,7 @@ public class AuthManager implements AuthService {
     final private PasswordEncoder passwordEncoder;
     final private JwtUtils jwtUtils;
 
-    @Autowired
+    //@Autowired // without adding this annotation it works
     public AuthManager(AuthenticationManager authenticationManager, UserService userService, RoleService roleService, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
@@ -60,35 +60,45 @@ public class AuthManager implements AuthService {
 
         // Create new user's account and hash password
         User user = new User(registerRequest.getUsername(), registerRequest.getEmail(), passwordEncoder.encode(registerRequest.getPassword()));
-        Set<String> strRoles = registerRequest.getRoles(); // todo rolleri direkt Set<Role> olarak gelmesi sağlanabilir
+        Set<String> strRoles = registerRequest.getRoles();
         Set<Role> roles = new HashSet<>();
+
+
 
         // set requested roles checking from database for security
         if (strRoles == null) {
-
-            roleService.createDefaultRoleIfNotExists(Roles.ROLE_USER);
-            roles.add(roleService.getRoleByName(Roles.ROLE_USER).getData());
-
+            addDefaultRole(roles);
         } else {
+            // if default user role not requested add
+            if (!strRoles.contains(Roles.ROLE_USER)){
+                addDefaultRole(roles);
+            }
+
             for (String role : strRoles) {
 
-                // if admin not exists create
+                // if admin requested and not exists create
                 if (Objects.equals(role, Roles.ROLE_ADMIN)) {
                     roleService.createDefaultRoleIfNotExists(role);
                 }
 
-                var resultRoleExists = roleService.checkIfRoleExists(role);
-                if (resultRoleExists.isSuccess()) {
-                    var roleToAdd = roleService.getRoleByName(role).getData();
-                    roles.add(roleToAdd);
+                var resultRoleExistsByName = roleService.checkIfRoleExistsByName(role);
+                if (!resultRoleExistsByName.isSuccess()) {
+                    return new ErrorDataResult<>(resultRoleExistsByName.getMessage());
                 }
-                return new ErrorDataResult<>(resultRoleExists.getMessage());
+                var roleToAdd = roleService.getRoleByName(role).getData();
+                roles.add(roleToAdd);
             }
         }
+
         // set requested roles and save
         user.setRoles(roles);
         userService.createUser(user);
         return new SuccessDataResult<>(generateJwtResponseUsernamePassword(registerRequest.getUsername(), registerRequest.getPassword()), Messages.successRegister);
+    }
+
+    private void addDefaultRole(Set<Role> roles) {
+        roleService.createDefaultRoleIfNotExists(Roles.ROLE_USER);
+        roles.add(roleService.getRoleByName(Roles.ROLE_USER).getData());
     }
 
     @Override
@@ -134,3 +144,34 @@ public class AuthManager implements AuthService {
         return new UserResponse(accessToken, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles);
     }
 }
+
+
+/*        var roles = registerRequest.getRoles();
+        //Set<Role> rolesToSet = new HashSet<>();
+        if (roles == null) {
+            roles = new HashSet<>();
+            roleService.createDefaultRoleIfNotExists(Roles.ROLE_USER);
+            roles.add(roleService.getRoleByName(Roles.ROLE_USER).getData());
+
+        } else {
+            for (Role role : roles) {
+
+                // if admin requested and not exists create
+                if (role.getName().equals(Roles.ROLE_ADMIN)) {
+                    roleService.createDefaultRoleIfNotExists(Roles.ROLE_ADMIN);
+                }
+                // role mode id 1    role = name mod id 3
+                // role admin id 2
+                // role user id 3
+// todo eğer role admin yoksa ve role user ın id si ile gönderim yapıldıysa
+                var resultRoleExistsById = roleService.checkIfRoleExistsById(role.getId());
+                var resultRoleExistsByName = roleService.checkIfRoleExistsByName(role.getName());
+                if (!resultRoleExistsById.isSuccess()) {
+                    return new ErrorDataResult<>(resultRoleExistsById.getMessage());
+                }
+                if (!resultRoleExistsByName.isSuccess()) {
+                    return new ErrorDataResult<>(resultRoleExistsByName.getMessage());
+                }
+
+            }
+        }*/

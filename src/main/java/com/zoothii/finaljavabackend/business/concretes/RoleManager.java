@@ -33,11 +33,20 @@ public class RoleManager implements RoleService {
     }
 
     @Override
+    public DataResult<Role> getRole(Role role) {
+        var result = roleDao.findById(role.getId().longValue());
+        if (result.isEmpty()){
+            return new ErrorDataResult<>("role yok");
+        }
+        return new SuccessDataResult<>(result.get(), "role returned");
+    }
+
+    @Override
     @PreAuthorize("hasAnyRole('BEN','ADMIN')")
     /*@CachePut(condition = "#result.success") // not used because puts as Result we need DataResult*/
     @CacheEvict(key = "'roles-cache'", condition = "#result.success") // result.success condition works
     public Result createRole(Role role) {
-        var resultRoleExists = checkIfRoleExists(role.getName());
+        var resultRoleExists = checkIfRoleExistsByName(role.getName());
         if (resultRoleExists.isSuccess()) {
             return new ErrorResult(resultRoleExists.getMessage());
         }
@@ -50,7 +59,7 @@ public class RoleManager implements RoleService {
     @PreAuthorize("hasAnyRole('BEN','ADMIN')")
     @CacheEvict(key = "'roles-cache'", condition = "#result.success")
     public Result deleteRole(Role role) {
-        var resultRoleExists = checkIfRoleExists(role.getName());
+        var resultRoleExists = checkIfRoleExistsByName(role.getName());
         if (!resultRoleExists.isSuccess()) {
             return new ErrorResult(resultRoleExists.getMessage());
         }
@@ -61,7 +70,7 @@ public class RoleManager implements RoleService {
 
     @Override
     public DataResult<Role> getRoleByName(String name) {
-        var resultRoleExists = checkIfRoleExists(name);
+        var resultRoleExists = checkIfRoleExistsByName(name);
         if (!resultRoleExists.isSuccess()) {
             return new ErrorDataResult<>(resultRoleExists.getMessage());
         }
@@ -71,11 +80,20 @@ public class RoleManager implements RoleService {
 
     // *** BUSINESS RULES ***
     @Override
-    public Result checkIfRoleExists(String role) {
+    public Result checkIfRoleExistsByName(String role) {
         if (roleDao.getRoleByName(role) == null) {
             return new ErrorResult(Messages.errorCheckIfRoleExists(role));
         }
         return new SuccessResult(Messages.successCheckIfRoleExists(role));
+    }
+
+    @Override
+    public Result checkIfRoleExistsById(int id) {
+        var result = roleDao.findById((long) id);
+        if (result.isEmpty()){
+            return new ErrorResult("role yok");
+        }
+        return new SuccessResult("role var");
     }
 
     @Override
